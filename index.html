@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Vision — Digital Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background images layer -->
+    <div class="bg-layers">
+        <div class="bg-image bg-image-1 active"></div>
+        <div class="bg-image bg-image-2"></div>
+        <div class="bg-overlay"></div>
+        <div class="bokeh-overlay"></div>
+    </div>
+
+    <!-- Particle canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="logo-icon">✦</span>
+            <span class="logo-text">NEON VISION</span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#hero" class="nav-link active">Головна</a>
+            <a href="#services" class="nav-link">Послуги</a>
+            <a href="#projects" class="nav-link">Проєкти</a>
+            <a href="#about" class="nav-link">Про нас</a>
+            <a href="#contact" class="nav-link">Контакти</a>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <div class="badge">✦ Digital Agency Since 2020</div>
+            <h1 class="hero-title">
+                Ми створюємо<br>
+                <span class="gradient-text">цифрову реальність</span>
+            </h1>
+            <p class="hero-subtitle">
+                Розробка, дизайн та маркетинг — усередині однієї екосистеми.
+                Перетворюємо ідеї у продукти, якими пишаються.
+            </p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary">Обговорити проєкт</a>
+                <a href="#projects" class="btn btn-outline">Наші роботи</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-num" data-target="50">0</span>
+                    <span class="stat-label">Проєктів</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num" data-target="30">0</span>
+                    <span class="stat-label">Клієнтів</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num" data-target="5">0</span>
+                    <span class="stat-label">Років на ринку</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <div class="section-header">
+            <span class="section-badge">Що ми вміємо</span>
+            <h2 class="section-title">Наші <span class="gradient-text">послуги</span></h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card" data-delay="0">
+                <div class="card-icon">🎨</div>
+                <h3>UI/UX Дизайн</h3>
+                <p>Інтерфейси, які захоплюють. Від концепції до піксель-перфект макетів.</p>
+            </div>
+            <div class="service-card" data-delay="100">
+                <div class="card-icon">⚡</div>
+                <h3>Веб-розробка</h3>
+                <p>Сайти, web-додатки та платформи на React, Vue, WordPress.</p>
+            </div>
+            <div class="service-card" data-delay="200">
+                <div class="card-icon">📱</div>
+                <h3>Мобільні додатки</h3>
+                <p>iOS та Android — Flutter, React Native, нативна розробка.</p>
+            </div>
+            <div class="service-card" data-delay="300">
+                <div class="card-icon">📈</div>
+                <h3>Digital Marketing</h3>
+                <p>PPC, SEO, SMM — стратегії, які приносять результат.</p>
+            </div>
+            <div class="service-card" data-delay="400">
+                <div class="card-icon">🤖</div>
+                <h3>AI & Automation</h3>
+                <p>Чат-боти, AI-асистенти, автоматизація бізнес-процесів.</p>
+            </div>
+            <div class="service-card" data-delay="500">
+                <div class="card-icon">🛡</div>
+                <h3>Брендинг</h3>
+                <p>Айдентіка, логотипи, фірмовий стиль — впізнаваність з першого погляду.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="projects">
+        <div class="section-header">
+            <span class="section-badge">Портфоліо</span>
+            <h2 class="section-title">Вибрані <span class="gradient-text">проєкти</span></h2>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-preview" style="background: linear-gradient(135deg, #1a0533, #0d1b3e);">
+                    <div class="preview-content">
+                        <div class="preview-icon">🛒</div>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">E-commerce</span>
+                    <h3>ElectroGo</h3>
+                    <p>Інтернет-магазин електротранспорту з кастомним каталогом</p>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-preview" style="background: linear-gradient(135deg, #0d2137, #1a0533);">
+                    <div class="preview-content">
+                        <div class="preview-icon">🏢</div>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">Corporate</span>
+                    <h3>ReStart</h3>
+                    <p>Корпоративний сайт з CRM-інтеграцією та AI-чатом</p>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-preview" style="background: linear-gradient(135deg, #1a0533, #2d1b4e);">
+                    <div class="preview-content">
+                        <div class="preview-icon">🔧</div>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">Service</span>
+                    <h3>GruzServis</h3>
+                    <p>Платформа замовлення вантажних перевезень з GPS-трекінгом</p>
+                </div>
+            </div>
+        </div>
+        <div class="projects-more">
+            <a href="#" class="btn btn-outline">Дивитись усі проєкти →</a>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="about-grid">
+            <div class="about-visual">
+                <div class="stats-ring">
+                    <svg viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="url(#ringGrad)" stroke-width="2"
+                            stroke-dasharray="534" stroke-dashoffset="160" stroke-linecap="round"
+                            transform="rotate(-90 100 100)"/>
+                        <defs>
+                            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="ring-center">
+                        <span class="ring-pct">97%</span>
+                        <span class="ring-label">Клієнтів задоволені</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-content">
+                <span class="section-badge">Про нас</span>
+                <h2>Код, креатив та <span class="gradient-text">стратегія</span></h2>
+                <p>Neon Vision — це команда з 12 ентузіастів, які об'єдналися навколо ідеї: робити цифрові продукти, що працюють і надихають. Ми не просто пишемо код — ми будуємо досвід.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <span class="feature-bullet">✦</span>
+                        <span>12 спеціалістів у команді</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-bullet">✦</span>
+                        <span>Англійська, українська, російська</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-bullet">✦</span>
+                        <span>Працюємо з Європою та США</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-bullet">✦</span>
+                        <span>Full-cycle розробка</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="section-header">
+            <span class="section-badge">Контакти</span>
+            <h2 class="section-title">Почати <span class="gradient-text">проєкт</span></h2>
+        </div>
+        <div class="contact-grid">
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <input type="text" placeholder="Ваше ім'я" required>
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <input type="text" placeholder="Тема проєкту">
+                <textarea placeholder="Опишіть вашу ідею..." rows="5" required></textarea>
+                <button type="submit" class="btn btn-primary">Відправити →</button>
+            </form>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <div>
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:hello@neonvision.digital">hello@neonvision.digital</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📱</span>
+                    <div>
+                        <span class="contact-label">Телефон</span>
+                        <span>+380 50 123 45 67</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🌐</span>
+                    <div>
+                        <span class="contact-label">Соцмережі</span>
+                        <div class="social-links">
+                            <a href="#" title="Instagram">IG</a>
+                            <a href="#" title="Telegram">TG</a>
+                            <a href="#" title="Behance">Be</a>
+                            <a href="#" title="GitHub">GH</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <span class="logo-icon">✦</span>
+                <span class="logo-text">NEON VISION</span>
+            </div>
+            <p class="footer-text">© 2026 Neon Vision Digital Agency. Всі права захищені.</p>
+        </div>
+    </footer>
+
+    <!-- Loading screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <span class="loader-icon">✦</span>
+            <div class="loader-bar"><div class="loader-fill"></div></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
