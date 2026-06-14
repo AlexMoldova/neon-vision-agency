@@ -247,6 +247,33 @@ window.addEventListener('scroll', () => {
     progressBar.style.width = progress + '%';
 });
 
+/* ========== WAVE PARALLAX ON SCROLL ========== */
+(function() {
+    const waves = document.querySelectorAll('.wave');
+    if (!waves.length) return;
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        waves.forEach((wave, i) => {
+            const speed = 0.02 + (i * 0.015);
+            wave.style.transform = `translateY(${scrollY * speed}px)`;
+        });
+    });
+})();
+
+/* ========== WAVE ON MOUSE MOVE ========== */
+(function() {
+    const waves = document.querySelectorAll('.wave');
+    if (!waves.length) return;
+
+    document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        waves.forEach((wave, i) => {
+            wave.style.setProperty('--wave-move', `${x * (5 + i * 3)}px`);
+        });
+    });
+})();
+
 /* ========== SECTION GLITCH TITLE TRIGGER ========== */
 function triggerGlitchOnTitles() {
     document.querySelectorAll('.section-title').forEach(title => {

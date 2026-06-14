@@ -21,6 +21,46 @@
     <!-- Tech grid overlay -->
     <div class="tech-grid"></div>
 
+    <!-- Wave animations -->
+    <div class="wave-container">
+        <div class="wave wave-1">
+            <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+                <path d="M0,100 C360,180 720,0 1080,100 C1260,150 1350,50 1440,80 L1440,200 L0,200 Z" fill="url(#waveGrad)"/>
+                <defs>
+                    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.4"/>
+                        <stop offset="50%" stop-color="#ec4899" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.2"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <div class="wave wave-2">
+            <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+                <path d="M0,50 C240,130 480,20 720,80 C960,140 1200,10 1440,60 L1440,200 L0,200 Z" fill="url(#waveGrad2)"/>
+                <defs>
+                    <linearGradient id="waveGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3"/>
+                        <stop offset="50%" stop-color="#6366f1" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.2"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <div class="wave wave-3">
+            <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+                <path d="M0,120 C180,30 360,160 540,60 C720,140 900,20 1080,90 C1260,160 1350,40 1440,70 L1440,200 L0,200 Z" fill="url(#waveGrad3)"/>
+                <defs>
+                    <linearGradient id="waveGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#ec4899" stop-opacity="0.25"/>
+                        <stop offset="50%" stop-color="#6366f1" stop-opacity="0.2"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.15"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
     <!-- Particle canvas -->
     <canvas id="particleCanvas"></canvas>
 
@@ -54,6 +94,18 @@
                 <span class="hero-morph">
                     <span class="morph-word" data-words='["цифрову реальність","майбутнє","технології","продукти"]'>цифрову реальність</span>
                 </span>
+                <span class="hero-wave">
+                    <svg viewBox="0 0 400 12" preserveAspectRatio="none">
+                        <path d="M0,6 C50,2 100,10 150,6 C200,2 250,10 300,6 C350,2 400,8 400,8 L400,12 L0,12 Z" fill="url(#heroWaveGrad)"/>
+                        <defs>
+                            <linearGradient id="heroWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#ec4899"/>
+                                <stop offset="100%" stop-color="#f59e0b"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
             </h1>
             <p class="hero-subtitle">
                 Розробка, дизайн та маркетинг — усередині однієї екосистеми.
@@ -81,7 +133,7 @@
     </section>
 
     <!-- Services -->
-    <section id="services" class="services">
+    <section id="services" class="services section-wave">
         <div class="section-header">
             <span class="section-badge">Що ми вміємо</span>
             <h2 class="section-title">Наші <span class="gradient-text">послуги</span></h2>
@@ -121,7 +173,7 @@
     </section>
 
     <!-- Projects -->
-    <section id="projects" class="projects">
+    <section id="projects" class="projects section-wave">
         <div class="section-header">
             <span class="section-badge">Портфоліо</span>
             <h2 class="section-title">Вибрані <span class="gradient-text">проєкти</span></h2>
@@ -170,7 +222,7 @@
     </section>
 
     <!-- About -->
-    <section id="about" class="about">
+    <section id="about" class="about section-wave">
         <div class="about-grid">
             <div class="about-visual">
                 <div class="stats-ring">
@@ -219,7 +271,7 @@
     </section>
 
     <!-- Contact -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact section-wave">
         <div class="section-header">
             <span class="section-badge">Контакти</span>
             <h2 class="section-title">Почати <span class="gradient-text">проєкт</span></h2>
