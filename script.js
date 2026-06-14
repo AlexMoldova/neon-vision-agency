@@ -167,7 +167,6 @@ class TrailSpark {
         trailCtx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.life * 0.6})`;
         trailCtx.fill();
 
-        // Glow
         trailCtx.beginPath();
         trailCtx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
         trailCtx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.life * 0.1})`;
@@ -210,6 +209,192 @@ function animateTrail() {
 }
 animateTrail();
 
+/* ========== NEW 24: CURSOR GLOW ORB ========== */
+const cursorGlow = document.getElementById('cursorGlow');
+let cursorX = 0, cursorY = 0;
+let glowX = 0, glowY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    cursorX = e.clientX;
+    cursorY = e.clientY;
+    cursorGlow.style.opacity = '1';
+});
+
+document.addEventListener('mouseleave', () => {
+    cursorGlow.style.opacity = '0';
+});
+
+document.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    cursorX = touch.clientX;
+    cursorY = touch.clientY;
+    cursorGlow.style.opacity = '1';
+});
+
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    cursorX = touch.clientX;
+    cursorY = touch.clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+    cursorGlow.style.opacity = '0';
+});
+
+function animateCursorGlow() {
+    glowX += (cursorX - glowX) * 0.08;
+    glowY += (cursorY - glowY) * 0.08;
+    cursorGlow.style.transform = `translate(${glowX - 150}px, ${glowY - 150}px)`;
+    requestAnimationFrame(animateCursorGlow);
+}
+animateCursorGlow();
+
+/* ========== NEW 25: LIQUID SWIPE ON CARDS ========== */
+(function() {
+    document.querySelectorAll(
+        '.service-card, .project-card, .about-content, .contact-form, .contact-info'
+    ).forEach(card => {
+        const swipe = document.createElement('div');
+        swipe.className = 'liquid-swipe';
+        const fill = document.createElement('div');
+        fill.className = 'liquid-fill';
+        swipe.appendChild(fill);
+        card.appendChild(swipe);
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            const angle = Math.atan2(y, x) * (180 / Math.PI) + 90;
+            fill.style.setProperty('--liquid-angle', `${angle}deg`);
+        });
+    });
+})();
+
+/* ========== NEW 26: SCROLL EQ BARS ========== */
+const eqCanvas = document.getElementById('eqCanvas');
+const eqCtx = eqCanvas.getContext('2d');
+let eqBars = [];
+
+function initEq() {
+    eqCanvas.width = window.innerWidth;
+    eqCanvas.height = 80;
+    const count = Math.floor(window.innerWidth / 6);
+    eqBars = [];
+    for (let i = 0; i < count; i++) {
+        eqBars.push({
+            height: Math.random() * 30 + 5,
+            target: Math.random() * 30 + 5,
+            speed: Math.random() * 0.03 + 0.01,
+        });
+    }
+}
+initEq();
+window.addEventListener('resize', initEq);
+
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? scrollY / docHeight : 0;
+
+    eqBars.forEach((bar, i) => {
+        const wave = Math.sin(Date.now() * 0.002 + i * 0.3) * 0.3;
+        bar.target = 10 + progress * 60 + wave * 20;
+    });
+});
+
+function animateEq() {
+    eqCtx.clearRect(0, 0, eqCanvas.width, eqCanvas.height);
+
+    const centerY = eqCanvas.height / 2;
+    const barWidth = eqCanvas.width / eqBars.length;
+
+    eqBars.forEach((bar, i) => {
+        bar.height += (bar.target - bar.height) * bar.speed;
+
+        const x = i * barWidth;
+        const w = barWidth - 2;
+        const h = bar.height;
+
+        // Glow
+        const hue = 220 + (h / 70) * 60;
+        const grad = eqCtx.createLinearGradient(x, centerY - h, x, centerY + h);
+        grad.addColorStop(0, `hsla(${hue}, 80%, 60%, 0.15)`);
+        grad.addColorStop(0.5, `hsla(${hue + 20}, 70%, 55%, 0.25)`);
+        grad.addColorStop(1, `hsla(${hue + 40}, 60%, 50%, 0.15)`);
+
+        eqCtx.fillStyle = grad;
+        eqCtx.fillRect(x, centerY - h / 2, w, h);
+
+        // Glow border
+        eqCtx.fillStyle = `hsla(${hue}, 80%, 70%, 0.08)`;
+        eqCtx.shadowColor = `hsla(${hue}, 80%, 60%, 0.1)`;
+        eqCtx.shadowBlur = 5;
+        eqCtx.fillRect(x, centerY - h / 2, w, h);
+        eqCtx.shadowBlur = 0;
+    });
+
+    requestAnimationFrame(animateEq);
+}
+animateEq();
+
+/* ========== NEW 27: AMBIENT TIME THEME ========== */
+(function() {
+    const hour = new Date().getHours();
+    const body = document.body;
+
+    if (hour >= 22 || hour < 5) {
+        body.classList.add('ambient-night');
+    } else if (hour >= 10 && hour < 17) {
+        body.classList.add('ambient-day');
+    }
+})();
+
+/* ========== NEW 28: MAGNETIC BUTTONS ========== */
+(function() {
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const dist = Math.sqrt(x * x + y * y);
+            const maxDist = Math.max(rect.width, rect.height);
+            const strength = Math.min(1, 1 - dist / maxDist) * 5;
+
+            btn.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px) scale(1.02)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = '';
+        });
+    });
+})();
+
+/* ========== NEW 29: NEON RAIN ========== */
+(function() {
+    const container = document.getElementById('rainContainer');
+    if (!container) return;
+    const dropCount = 40;
+
+    for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.height = (Math.random() * 60 + 30) + 'px';
+        drop.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+        drop.style.animationDelay = (Math.random() * 5) + 's';
+        drop.style.opacity = Math.random() * 0.4 + 0.1;
+
+        // Random neon color
+        const colors = ['rgba(99,102,241,0.15)', 'rgba(236,72,153,0.12)', 'rgba(6,182,212,0.1)']; 
+            const c = colors[Math.floor(Math.random() * colors.length)];
+            const parts = c.slice(0, -1);
+        drop.style.background = `linear-gradient(to bottom, transparent, ${parts}0.4) 0%, ${parts}0.1) 100%)`;
+
+        container.appendChild(drop);
+    }
+})();
+
 /* ========== HERO TEXT MORPHING ========== */
 (function() {
     const morphEl = document.querySelector('.morph-word');
@@ -232,8 +417,6 @@ animateTrail();
     }
 
     setInterval(morphText, 4000);
-
-    // Add transition for smooth morph
     morphEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
 })();
 
@@ -290,7 +473,7 @@ function triggerGlitchOnTitles() {
 }
 triggerGlitchOnTitles();
 
-/* ========== SCROLL ANIMATIONS (enhanced) ========== */
+/* ========== SCROLL ANIMATIONS ========== */
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -320,7 +503,6 @@ document.querySelectorAll(
     observer.observe(el);
 });
 
-// Also observe sections for ::after divider line
 document.querySelectorAll('section').forEach(el => {
     el.classList.add('fade-in');
     observer.observe(el);
@@ -457,5 +639,57 @@ setTimeout(() => {
     }
 }, 2000);
 
+/* ========== KONAMI CODE EASTER EGG ========== */
+(function() {
+    const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    let pos = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.keyCode === konami[pos]) {
+            pos++;
+            if (pos === konami.length) {
+                pos = 0;
+
+                // Party mode!
+                document.body.style.animation = 'none';
+                document.querySelectorAll('.bg-image, .bg-overlay, .bokeh-overlay').forEach(el => {
+                    el.style.animation = 'none';
+                });
+
+                // Rainbow flash
+                const flash = document.createElement('div');
+                flash.style.cssText = 'position:fixed;inset:0;z-index:10000;pointer-events:none;transition:opacity 3s';
+                flash.style.background = 'linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff)';
+                flash.style.backgroundSize = '400% 400%';
+                flash.style.animation = 'progressPulse 2s ease infinite, borderMorph 2s ease infinite';
+                flash.style.opacity = '0.15';
+                document.body.appendChild(flash);
+
+                // Display message
+                const msg = document.createElement('div');
+                msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10001;font-size:3rem;font-weight:900;pointer-events:none;text-align:center';
+                msg.innerHTML = '⚡ NEON MODE UNLOCKED ⚡<br><span style="font-size:1rem;opacity:0.6">Вітаємо в матриці</span>';
+                msg.style.background = 'linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)';
+                msg.style.webkitBackgroundClip = 'text';
+                msg.style.webkitTextFillColor = 'transparent';
+                document.body.appendChild(msg);
+
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                    msg.style.opacity = '0';
+                    msg.style.transition = 'opacity 2s';
+                    setTimeout(() => {
+                        flash.remove();
+                        msg.remove();
+                    }, 2000);
+                }, 3000);
+            }
+        } else {
+            pos = 0;
+        }
+    });
+})();
+
 console.log('✦ NEON VISION — Digital Agency');
 console.log('✦ Зроблено з технологічною душею ⚡');
+console.log('✦ Спробуй Konami Code: ↑↑↓↓←→←→BA');
