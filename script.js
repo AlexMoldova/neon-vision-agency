@@ -18,7 +18,6 @@ window.addEventListener('load', () => {
         images[current].classList.add('active');
     }
 
-    // Switch every 8 seconds
     setInterval(switchBg, 8000);
 })();
 
@@ -111,7 +110,6 @@ for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle());
 }
 
-// Mouse tracking
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
@@ -140,7 +138,35 @@ function animateParticles() {
 
 animateParticles();
 
-/* ========== SCROLL ANIMATIONS ========== */
+/* ========== SCROLL PROGRESS BAR ========== */
+const progressBar = document.getElementById('scrollProgress');
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+});
+
+/* ========== SECTION GLITCH TITLE TRIGGER ========== */
+function triggerGlitchOnTitles() {
+    document.querySelectorAll('.section-title').forEach(title => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    title.classList.add('glitch-visible');
+                    // Remove class after animation completes so next visit retriggers
+                    setTimeout(() => title.classList.remove('glitch-visible'), 1000);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(title);
+    });
+}
+triggerGlitchOnTitles();
+
+/* ========== SCROLL ANIMATIONS (enhanced) ========== */
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -149,7 +175,6 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            // Stagger children if present
             const children = entry.target.querySelectorAll('.service-card, .project-card');
             if (children.length) {
                 children.forEach((child, i) => {
@@ -164,7 +189,9 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-document.querySelectorAll('.service-card, .project-card, .section-header, .about-content, .contact-form, .contact-info').forEach(el => {
+document.querySelectorAll(
+    '.service-card, .project-card, .section-header, .about-content, .contact-form, .contact-info, .hero-stats'
+).forEach(el => {
     el.classList.add('fade-in');
     observer.observe(el);
 });
@@ -191,11 +218,11 @@ function animateCounters() {
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    updateCounter();
+                    setTimeout(updateCounter, 300); // small delay for dramatic effect
                     counterObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.4 });
 
         counterObserver.observe(counter);
     });
@@ -218,7 +245,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// Active link on scroll
+// Active link + scrolled class
 const sections = document.querySelectorAll('section[id]');
 window.addEventListener('scroll', () => {
     let current = '';
@@ -235,9 +262,16 @@ window.addEventListener('scroll', () => {
             link.classList.add('active');
         }
     });
+
+    // Scrolled class for glow
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
 });
 
-// Hide/show navbar on scroll
+// Hide/show on scroll
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
@@ -288,5 +322,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+/* ========== HERO TITLE TYPEWRITER FX (bonus) ========== */
+// Small delay then add a subtle glow pulse to hero title
+setTimeout(() => {
+    const heroTitle = document.querySelector('.hero-title .gradient-text');
+    if (heroTitle) {
+        heroTitle.style.animation = '';
+        // Force reflow
+        void heroTitle.offsetWidth;
+        heroTitle.style.animation = 'glitchNeon 0.8s ease-out 1';
+    }
+}, 2000);
+
 console.log('✦ NEON VISION — Digital Agency');
-console.log('✦ Сайт створено з любовʼю до технологій');
+console.log('✦ Зроблено з технологічною душею ⚡');
