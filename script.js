@@ -61,7 +61,6 @@ class Particle {
         this.x += this.speedX;
         this.life--;
 
-        // Mouse interaction
         const dx = this.x - mouseX;
         const dy = this.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -72,7 +71,6 @@ class Particle {
             this.opacity = Math.min(0.7, this.opacity + force * 0.2);
         }
 
-        // Flicker glow
         const flickerVal = Math.sin(Date.now() * this.flicker * 0.001 + this.flickerOffset);
         this.opacity += flickerVal * 0.015;
         this.opacity = Math.max(0.05, Math.min(0.5, this.opacity));
@@ -94,10 +92,8 @@ class Particle {
             this.x, this.y, this.size * 4
         );
 
-        const alpha = this.opacity;
-
-        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 75%, ${alpha})`);
-        gradient.addColorStop(0.3, `hsla(${this.hue + 20}, 70%, 65%, ${alpha * 0.4})`);
+        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 75%, ${this.opacity})`);
+        gradient.addColorStop(0.3, `hsla(${this.hue + 20}, 70%, 65%, ${this.opacity * 0.4})`);
         gradient.addColorStop(1, `hsla(${this.hue + 40}, 60%, 55%, 0)`);
 
         ctx.fillStyle = gradient;
@@ -127,16 +123,119 @@ document.addEventListener('touchend', () => {
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-
+    particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateParticles);
 }
-
 animateParticles();
+
+/* ========== MOUSE TRAIL SPARKLES ========== */
+const trailCanvas = document.getElementById('mouseTrailCanvas');
+const trailCtx = trailCanvas.getContext('2d');
+
+let trailParticles = [];
+
+function resizeTrailCanvas() {
+    trailCanvas.width = window.innerWidth;
+    trailCanvas.height = window.innerHeight;
+}
+resizeTrailCanvas();
+window.addEventListener('resize', resizeTrailCanvas);
+
+class TrailSpark {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = (Math.random() - 0.5) * 4;
+        this.life = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+        this.size = Math.random() * 3 + 1;
+        this.hue = Math.random() * 60 + 220;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        this.size *= 0.98;
+    }
+
+    draw() {
+        if (this.life <= 0) return;
+        trailCtx.beginPath();
+        trailCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        trailCtx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.life * 0.6})`;
+        trailCtx.fill();
+
+        // Glow
+        trailCtx.beginPath();
+        trailCtx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+        trailCtx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.life * 0.1})`;
+        trailCtx.fill();
+    }
+}
+
+let lastTrailTime = 0;
+document.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastTrailTime < 40) return;
+    lastTrailTime = now;
+
+    for (let i = 0; i < 3; i++) {
+        trailParticles.push(new TrailSpark(e.clientX, e.clientY));
+    }
+    if (trailParticles.length > 120) {
+        trailParticles = trailParticles.slice(-80);
+    }
+});
+
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    const now = Date.now();
+    if (now - lastTrailTime < 60) return;
+    lastTrailTime = now;
+
+    for (let i = 0; i < 2; i++) {
+        trailParticles.push(new TrailSpark(touch.clientX, touch.clientY));
+    }
+}, { passive: true });
+
+function animateTrail() {
+    trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+    trailParticles = trailParticles.filter(p => p.life > 0);
+    trailParticles.forEach(p => { p.update(); p.draw(); });
+
+    requestAnimationFrame(animateTrail);
+}
+animateTrail();
+
+/* ========== HERO TEXT MORPHING ========== */
+(function() {
+    const morphEl = document.querySelector('.morph-word');
+    if (!morphEl) return;
+    const words = JSON.parse(morphEl.getAttribute('data-words') || '[]');
+    if (words.length < 2) return;
+
+    let index = 0;
+
+    function morphText() {
+        index = (index + 1) % words.length;
+        morphEl.style.opacity = '0';
+        morphEl.style.transform = 'translateY(-8px)';
+
+        setTimeout(() => {
+            morphEl.textContent = words[index];
+            morphEl.style.opacity = '1';
+            morphEl.style.transform = 'translateY(0)';
+        }, 400);
+    }
+
+    setInterval(morphText, 4000);
+
+    // Add transition for smooth morph
+    morphEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+})();
 
 /* ========== SCROLL PROGRESS BAR ========== */
 const progressBar = document.getElementById('scrollProgress');
@@ -155,12 +254,10 @@ function triggerGlitchOnTitles() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     title.classList.add('glitch-visible');
-                    // Remove class after animation completes so next visit retriggers
                     setTimeout(() => title.classList.remove('glitch-visible'), 1000);
                 }
             });
         }, { threshold: 0.3 });
-
         observer.observe(title);
     });
 }
@@ -196,29 +293,38 @@ document.querySelectorAll(
     observer.observe(el);
 });
 
+// Also observe sections for ::after divider line
+document.querySelectorAll('section').forEach(el => {
+    el.classList.add('fade-in');
+    observer.observe(el);
+});
+
 /* ========== COUNTER ANIMATION ========== */
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-num');
 
     counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-target'));
-        const increment = target / 40;
-        let current = 0;
 
         const updateCounter = () => {
-            current += increment;
-            if (current < target) {
-                counter.textContent = Math.ceil(current) + '+';
-                requestAnimationFrame(updateCounter);
-            } else {
-                counter.textContent = target + '+';
-            }
+            const increment = target / 40;
+            let current = 0;
+            const timer = () => {
+                current += increment;
+                if (current < target) {
+                    counter.textContent = Math.ceil(current) + '+';
+                    requestAnimationFrame(timer);
+                } else {
+                    counter.textContent = target + '+';
+                }
+            };
+            timer();
         };
 
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    setTimeout(updateCounter, 300); // small delay for dramatic effect
+                    setTimeout(updateCounter, 400);
                     counterObserver.unobserve(entry.target);
                 }
             });
@@ -227,7 +333,6 @@ function animateCounters() {
         counterObserver.observe(counter);
     });
 }
-
 animateCounters();
 
 /* ========== NAVBAR ========== */
@@ -245,7 +350,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// Active link + scrolled class
 const sections = document.querySelectorAll('section[id]');
 window.addEventListener('scroll', () => {
     let current = '';
@@ -263,7 +367,6 @@ window.addEventListener('scroll', () => {
         }
     });
 
-    // Scrolled class for glow
     if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
     } else {
@@ -271,18 +374,14 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Hide/show on scroll
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
-
     if (currentScroll > 100) {
-        navbar.style.transform = currentScroll > lastScroll ?
-            'translateY(-100%)' : 'translateY(0)';
+        navbar.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
     } else {
         navbar.style.transform = 'translateY(0)';
     }
-
     lastScroll = currentScroll;
 });
 
@@ -322,15 +421,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-/* ========== HERO TITLE TYPEWRITER FX (bonus) ========== */
-// Small delay then add a subtle glow pulse to hero title
+/* ========== HERO TITLE INITIAL GLITCH ========== */
 setTimeout(() => {
-    const heroTitle = document.querySelector('.hero-title .gradient-text');
+    const heroTitle = document.querySelector('.hero-title .hero-morph .morph-word');
     if (heroTitle) {
         heroTitle.style.animation = '';
-        // Force reflow
         void heroTitle.offsetWidth;
-        heroTitle.style.animation = 'glitchNeon 0.8s ease-out 1';
     }
 }, 2000);
 
